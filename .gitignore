@@ -34,3 +34,6 @@ build/
 
 
 itinerary/src/main/resources/application-local.properties
+itinerary/src/main/resources/application-local-example.properties
+itinerary/src/main/resources/application.properties
+
