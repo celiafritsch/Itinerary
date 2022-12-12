@@ -9,16 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path="/api/v1/itinerary")
 public class ItineraryController {
-
-    private final ItineraryServiceORS itineraryServiceORS;
-    private final ItineraryServiceHere itineraryServiceHere;
-
     private final ItineraryServiceGeoapify itineraryServiceGeoapify;
 
     @Autowired
-    public ItineraryController(ItineraryServiceORS itineraryService, ItineraryServiceHere itineraryServiceHere, ItineraryServiceGeoapify itineraryServiceGeoapify) {
-        this.itineraryServiceORS = itineraryService;
-        this.itineraryServiceHere = itineraryServiceHere;
+    public ItineraryController(ItineraryServiceGeoapify itineraryServiceGeoapify) {
         this.itineraryServiceGeoapify = itineraryServiceGeoapify;
     }
 
