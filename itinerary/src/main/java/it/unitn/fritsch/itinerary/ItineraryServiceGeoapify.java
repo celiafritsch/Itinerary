@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,11 +29,11 @@ public class ItineraryServiceGeoapify {
         this.restTemplate = restTemplate;
     }
 
-    public String getItinerary(){
+    public String getItinerary(double startLat, double startLong, double endLat, double endLong, String mode){
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set("Authorization", api_key );
-        String s = "?waypoints=41.89427704160718,12.480640574647623|41.8902614,12.493087103595503&mode=transit";
+        String s = "?waypoints="+startLat+","+startLong+"|"+endLat+","+endLong+"&mode="+mode;
         HttpEntity request = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(
                 base+s,
@@ -44,12 +45,21 @@ public class ItineraryServiceGeoapify {
         return response.getBody();
     }
 
-    public int getTime() throws JsonProcessingException {
+    public Map<String, Integer> getInfo(double startLat, double startLong, double endLat, double endLong, String mode) throws JsonProcessingException {
         ObjectReader reader = new ObjectMapper().readerFor(Map.class);
-        Map<String, Object> map = reader.readValue(getItinerary());
+        Map<String, Object> map = reader.readValue(getItinerary(startLat, startLong, endLat, endLong, mode));
         Object properties = ((Map)((List) map.get("features")).get(0)).get("properties");
         System.out.println(properties);
-        System.out.println(map.toString());
-        return (int)((Map)properties).get("time");
+        System.out.println(map);
+        Map<String, Integer> info = new HashMap<>();
+        System.out.println(((Map)properties).get("time").getClass());
+        if (((Map)properties).get("time").getClass().equals(Double.class)){
+            info.put("time", ((Double)((Map)properties).get("time")).intValue());
+        }
+        else {
+            info.put("time", (Integer)((Map)properties).get("time"));
+        }
+        info.put("distance", (Integer) ((Map)properties).get("distance"));
+        return info;
     }
 }
