@@ -1,6 +1,9 @@
-package it.unitn.fritsch.itinerary;
+package it.unitn.fritsch.itinerary.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import it.unitn.fritsch.itinerary.model.Itinerary;
+import it.unitn.fritsch.itinerary.service.ItineraryServiceGeoapify;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +27,10 @@ public class ItineraryController {
     }*/
 
     @GetMapping("/{mode}")
-    public Map<String, Integer> getRouteInfo(@PathVariable String mode, @RequestParam("startLat") double startLat, @RequestParam("startLong") double startLong, @RequestParam("endLat") double endLat, @RequestParam("endLong") double endLong) throws JsonProcessingException {
-        return itineraryServiceGeoapify.getInfo(startLat, startLong, endLat, endLong, mode);
+    public String getRouteInfo(@PathVariable String mode, @RequestParam("startLat") double startLat, @RequestParam("startLong") double startLong, @RequestParam("endLat") double endLat, @RequestParam("endLong") double endLong) throws JsonProcessingException {
+        Itinerary res = itineraryServiceGeoapify.getInfo(startLat, startLong, endLat, endLong, mode);
+        //System.out.println(new Gson().toJson(res));
+        return (new Gson().toJson(res));
     }
 
 
