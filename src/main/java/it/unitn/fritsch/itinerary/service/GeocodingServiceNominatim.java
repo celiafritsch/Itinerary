@@ -25,12 +25,18 @@ public class GeocodingServiceNominatim {
     }
 
     public Position getPosition(String address) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(callAPI(address).getBody());
-        JsonNode features = root.get("features");
-        JsonNode geometry = (features.get(0)).get("geometry");
-        JsonNode coordinates = geometry.get("coordinates");
-        Position result = new Position(coordinates.get(1).asDouble(), coordinates.get(0).asDouble());
-        return result;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(callAPI(address).getBody());
+            JsonNode features = root.get("features");
+            JsonNode geometry = (features.get(0)).get("geometry");
+            JsonNode coordinates = geometry.get("coordinates");
+            Position result = new Position(coordinates.get(1).asDouble(), coordinates.get(0).asDouble());
+            return result;
+        }
+        catch (Exception e){
+            Position result = new Position(0,0);
+            return result;
+        }
     }
 }
