@@ -7,6 +7,12 @@ public class Itinerary {
     int time;
     ArrayList<Position> position;
 
+    public Itinerary(){
+        dist = 0;
+        time = 0;
+        position = new ArrayList<>();
+    }
+
     public int getDist() {
         return dist;
     }
